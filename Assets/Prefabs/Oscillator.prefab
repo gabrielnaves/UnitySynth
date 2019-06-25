@@ -71,6 +71,15 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   volume: 1
+  envelope:
+    attackTime: 0.01
+    decayTime: 0.01
+    releaseTime: 0.02
+    startAmplitude: 1
+    sustainAmplitude: 0.8
+    triggerOnTime: 0
+    triggerOffTime: 0
+    noteOn: 0
 --- !u!82 &1840597369307667675
 AudioSource:
   m_ObjectHideFlags: 0
