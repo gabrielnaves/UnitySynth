@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1840597369307667673}
   - component: {fileID: 1840597369307667672}
+  - component: {fileID: 7915085237808440736}
   - component: {fileID: 1840597369307667675}
   m_Layer: 0
   m_Name: Oscillator
@@ -44,42 +45,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1d5dfb2be2976042b1bbe671705ebe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveType: 0
-  frequency: 440
+--- !u!114 &7915085237808440736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840597369307667674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e57e0a03c1078e4081bf94530e41c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
   curve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.011505127
-      inSlope: 7.906459
-      outSlope: 7.906459
-      tangentMode: 0
-      weightedMode: 3
+      value: 0
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
       inWeight: 0
-      outWeight: 0.43162012
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 4
+      outSlope: -4
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.75
+      value: -1
+      inSlope: -4
+      outSlope: 4
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 7.637413
-      outSlope: 7.637413
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.44589812
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
       outWeight: 0
-    m_PreInfinity: 1
+    m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  volume: 1
-  envelope:
-    attackTime: 0.01
-    decayTime: 0.01
-    releaseTime: 0.02
-    startAmplitude: 1
-    sustainAmplitude: 0.8
-    triggerOnTime: 0
-    triggerOffTime: 0
-    noteOn: 0
+  frequency: 440
+  lfoFrequency: 0
+  lfoAmplitude: 0
 --- !u!82 &1840597369307667675
 AudioSource:
   m_ObjectHideFlags: 0
@@ -102,7 +125,7 @@ AudioSource:
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
-  Pan2D: 0.36
+  Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0

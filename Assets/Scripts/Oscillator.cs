@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Synth
 {
@@ -8,89 +7,37 @@ namespace Synth
     [RequireComponent(typeof(AudioSource))]
     public class Oscillator : MonoBehaviour
     {
-        public enum WaveType { sine, square, triangle, sawtooth, animationCurve, noise }
-
-        public WaveType waveType;
-        public double frequency = 440.0;
-        public AnimationCurve curve;
-        [Range(0, 1)] public float volume = 1;
-        public Envelope envelope;
-
-        private double increment;
-        private double phase;
+        private AudioSource audioSource;
+        private Waveform[] waveforms;
         private double gain;
-        private double sampling_frequency = 48000.0;
-
-        private double pi_twice = Mathf.PI * 2;
-        private double ratio;
-        private System.Random rand = new System.Random();
-
-        private Dictionary<WaveType, System.Func<float>> waveFunction;
 
         private void Awake()
         {
-            CreateWaveFunctionDictionary();
-            ratio = pi_twice / sampling_frequency;
+            audioSource = GetComponent<AudioSource>();
+            waveforms = GetComponents<Waveform>();
         }
 
-        private void CreateWaveFunctionDictionary()
+        private void Update()
         {
-            waveFunction = new Dictionary<WaveType, System.Func<float>>();
-            waveFunction.Add(WaveType.sine, SineWave);
-            waveFunction.Add(WaveType.square, SquareWave);
-            waveFunction.Add(WaveType.triangle, TriangleWave);
-            waveFunction.Add(WaveType.sawtooth, SawtoothWave);
-            waveFunction.Add(WaveType.animationCurve, AnimationCurveWave);
-            waveFunction.Add(WaveType.noise, Noise);
+            gain = audioSource.volume * .1;
         }
 
         private void OnAudioFilterRead(float[] data, int channels)
         {
-            increment = frequency * ratio;
-            gain = volume * .1;
+            foreach (var wave in waveforms)
+                wave.UpdateIncrement();
             for (int i = 0; i < data.Length; i += channels)
             {
-                UpdatePhase();
-                data[i] = waveFunction[waveType]();
+                double d = 0;
+                foreach (var wave in waveforms)
+                {
+                    wave.UpdatePhase();
+                    d += wave.Evaluate();
+                }
+                data[i] = (float)(gain * d);
                 if (channels == 2)
                     data[i + 1] = data[i];
             }
-        }
-
-        private void UpdatePhase()
-        {
-            phase += increment;
-            if (phase > pi_twice)
-                phase -= pi_twice;
-        }
-
-        private float SineWave()
-        {
-            return (float)(gain) * Mathf.Sin((float)phase);
-        }
-
-        private float SquareWave()
-        {
-            return (float)gain * (Mathf.Sin((float)phase) >= 0 ? .5f : -.5f);
-        }
-
-        private float TriangleWave()
-        {
-            return (float)(gain) * (Mathf.Asin(Mathf.Sin((float)phase)) * 2f / Mathf.PI);
-        }
-
-        private float SawtoothWave()
-        {
-            return (float)(gain * (phase / pi_twice - .5));
-        }
-
-        private float AnimationCurveWave()
-        {
-            return (float)(gain * curve.Evaluate((float)(phase / pi_twice)));
-        }
-
-        private float Noise() {
-            return (float)(gain * (rand.NextDouble() * 2 - 1));
         }
     }
 }
