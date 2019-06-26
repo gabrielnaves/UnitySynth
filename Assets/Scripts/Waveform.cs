@@ -5,7 +5,7 @@ namespace Synth
 {
     public class Waveform : MonoBehaviour
     {
-        public enum WaveType { sine, square, triangle, sawtooth, animationCurve, noise }
+        public enum WaveType { sine, square, triangle, sawtooth, analogSawtooth, animationCurve, noise }
 
         public WaveType type;
         public AnimationCurve curve;
@@ -55,6 +55,7 @@ namespace Synth
             waveFunction.Add(WaveType.square, SquareWave);
             waveFunction.Add(WaveType.triangle, TriangleWave);
             waveFunction.Add(WaveType.sawtooth, SawtoothWave);
+            waveFunction.Add(WaveType.analogSawtooth, AnalogSawtoothWave);
             waveFunction.Add(WaveType.animationCurve, AnimationCurveWave);
             waveFunction.Add(WaveType.noise, Noise);
         }
@@ -77,6 +78,14 @@ namespace Synth
         private double SawtoothWave()
         {
             return phase / pi_twice - .5;
+        }
+
+        private double AnalogSawtoothWave()
+        {
+            double output = 0;
+            for (double n = 1; n < 10; ++n)
+                output += Mathf.Sin((float)(n * phase)) / n;
+            return output;
         }
 
         private double AnimationCurveWave()
