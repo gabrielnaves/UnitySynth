@@ -225,8 +225,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2047040839}
   - component: {fileID: 2047040838}
+  - component: {fileID: 2047040840}
   m_Layer: 0
-  m_Name: KeyboardPlayer
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,7 +240,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047040837}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91824f61e4580674f9a123c0f83de0d9, type: 3}
   m_Name: 
@@ -261,6 +262,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2047040840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047040837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da8f14f9cae4647488a6c26acab493d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instruments:
+  - {fileID: 1039427141}
+  note:
+    frequency: 440
+    on: 1
+    elapsedTime: 0
+    triggerOffTime: 0
+    dead: 0
+    phase: 0
 --- !u!1001 &1840597368995265998
 PrefabInstance:
   m_ObjectHideFlags: 0

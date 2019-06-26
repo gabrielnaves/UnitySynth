@@ -5,8 +5,8 @@ namespace Synth
     [System.Serializable]
     public class Note
     {
-        public double frequency;
-        public bool on;
+        public double frequency = 440;
+        public bool on = true;
 
         [ViewOnly] public double elapsedTime;
         [ViewOnly] public double triggerOffTime;
@@ -14,29 +14,28 @@ namespace Synth
         [ViewOnly] public double phase;
 
         private double sampling_frequency = 48000.0;
-        private double dt;
         private double pi_twice = 2 * Mathf.PI;
-        private double increment;
+
+        private double dt;
+
+        public Note()
+        {
+            Setup();
+        }
 
         public Note(double frequency)
         {
             this.frequency = frequency;
-            on = true;
-            elapsedTime = 0;
-            triggerOffTime = 0;
-            dead = false;
-            phase = 0;
+            Setup();
+        }
+
+        private void Setup() {
             dt = 1.0 / sampling_frequency;
-            increment = frequency * pi_twice / sampling_frequency;
         }
 
-        public void UpdateTime() {
+        public void Update() {
             elapsedTime += dt;
-        }
-
-        public void UpdatePhase()
-        {
-            phase += increment;
+            phase += frequency * pi_twice / sampling_frequency;
             if (phase > pi_twice)
                 phase -= pi_twice;
         }

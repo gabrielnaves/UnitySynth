@@ -13,7 +13,6 @@
         {
             double amplitude = 0;
 
-            note.UpdateTime();
             double time = note.elapsedTime;
 
             if (note.on)

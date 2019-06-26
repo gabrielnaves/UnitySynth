@@ -7,10 +7,10 @@ namespace Synth
     public class Instrument : MonoBehaviour
     {
         public Envelope envelope;
-        public List<Note> notes = new List<Note>();
 
         private AudioSource audioSource;
         private Waveform[] waveforms;
+        private List<Note> notes = new List<Note>();
         private double gain;
 
         public void AddNote(Note note)
@@ -35,29 +35,23 @@ namespace Synth
         {
             Note[] notes = this.notes.ToArray();
 
-            UpdateWaveLFOIncrements();
             for (int i = 0; i < data.Length; i += channels)
             {
-                // Calculate sound value
                 double d = 0;
                 foreach (var wave in waveforms)
                 {
                     wave.UpdateLFOPhase();
                     foreach (var note in notes)
+                    {
+                        note.Update();
                         d += envelope.GetAmplitude(note) * wave.Evaluate(note);
+                    }
                 }
 
-                // Set sound data values in channels
                 data[i] = (float)(gain * d);
                 if (channels == 2)
                     data[i + 1] = data[i];
             }
-        }
-
-        private void UpdateWaveLFOIncrements()
-        {
-            foreach (var wave in waveforms)
-                wave.UpdateLFOIncrement();
         }
     }
 }
