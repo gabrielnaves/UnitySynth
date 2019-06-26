@@ -3,41 +3,27 @@
     [System.Serializable]
     public class Envelope
     {
-        public double attackTime;
-        public double decayTime;
-        public double releaseTime;
-        public double startAmplitude;
-        public double sustainAmplitude;
+        public double attackTime = .01;
+        public double decayTime = 0.01;
+        public double releaseTime = 0.02;
+        public double startAmplitude = 1;
+        public double sustainAmplitude = 0.8;
 
-        [ViewOnly] public double triggerOnTime;
-        [ViewOnly] public double triggerOffTime;
-        [ViewOnly] public bool noteOn;
-
-        public Envelope()
-        {
-            attackTime = .01;
-            decayTime = .01;
-            startAmplitude = 1;
-            sustainAmplitude = .8;
-            releaseTime = 0.02;
-            triggerOnTime = 0;
-            triggerOffTime = 0;
-            noteOn = false;
-        }
-
-        public double GetAmplitude(double time)
+        public double GetAmplitude(Note note)
         {
             double amplitude = 0;
-            double lifetime = time - triggerOnTime;
 
-            if (noteOn)
+            note.UpdateTime();
+            double time = note.elapsedTime;
+
+            if (note.on)
             {
                 // Attack
-                if (lifetime <= attackTime)
-                    amplitude = lifetime / attackTime * startAmplitude;
+                if (time <= attackTime)
+                    amplitude = time / attackTime * startAmplitude;
                 // Decay
-                else if (lifetime <= attackTime + decayTime)
-                    amplitude = (lifetime - attackTime) / decayTime * (sustainAmplitude - startAmplitude) + startAmplitude;
+                else if (time <= attackTime + decayTime)
+                    amplitude = (time - attackTime) / decayTime * (sustainAmplitude - startAmplitude) + startAmplitude;
                 // Sustain
                 else
                     amplitude = sustainAmplitude;
@@ -45,25 +31,13 @@
             else
             {
                 // Release
-                amplitude = sustainAmplitude - (time - triggerOffTime) / releaseTime * sustainAmplitude;
+                amplitude = sustainAmplitude - (time - note.triggerOffTime) / releaseTime * sustainAmplitude;
+
+                if (time - note.triggerOffTime > releaseTime)
+                    note.Deactivate();
             }
 
-            if (amplitude < .0001)
-                amplitude = 0;
-
             return amplitude;
-        }
-
-        public void NoteOn(double time)
-        {
-            triggerOnTime = time;
-            noteOn = true;
-        }
-
-        public void NoteOff(double time)
-        {
-            triggerOffTime = time;
-            noteOn = false;
         }
     }
 }

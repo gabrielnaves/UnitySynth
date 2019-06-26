@@ -9,38 +9,32 @@ namespace Synth
 
         public WaveType type;
         public AnimationCurve curve;
-        public double frequency = 440;
         public double lfoFrequency;
         public double lfoAmplitude;
 
         private double sampling_frequency = 48000.0;
         private double pi_twice = 2 * Mathf.PI;
-        private double increment;
-        private double phase;
         private double lfoIncrement;
         private double lfoPhase;
         private System.Random rand = new System.Random();
 
-        private Dictionary<WaveType, System.Func<double>> waveFunction;
+        private Dictionary<WaveType, System.Func<Note, double>> waveFunction;
 
-        public void UpdateIncrement()
+        public void UpdateLFOIncrement()
         {
-            increment = frequency * pi_twice / sampling_frequency;
             lfoIncrement = lfoFrequency * pi_twice / sampling_frequency;
         }
 
-        public void UpdatePhase()
+        public void UpdateLFOPhase()
         {
-            phase += increment;
-            if (phase > pi_twice)
-                phase -= pi_twice;
             lfoPhase += lfoIncrement;
             if (lfoPhase > pi_twice)
                 lfoPhase -= pi_twice;
         }
 
-        public double Evaluate() {
-            return waveFunction[type]();
+        public double Evaluate(Note note) {
+            note.UpdatePhase();
+            return waveFunction[type](note);
         }
 
         private void Awake()
@@ -50,7 +44,7 @@ namespace Synth
 
         private void CreateWaveFunctionDictionary()
         {
-            waveFunction = new Dictionary<WaveType, System.Func<double>>();
+            waveFunction = new Dictionary<WaveType, System.Func<Note, double>>();
             waveFunction.Add(WaveType.sine, SineWave);
             waveFunction.Add(WaveType.square, SquareWave);
             waveFunction.Add(WaveType.triangle, TriangleWave);
@@ -60,40 +54,40 @@ namespace Synth
             waveFunction.Add(WaveType.noise, Noise);
         }
 
-        private double SineWave()
+        private double SineWave(Note note)
         {
-            return Mathf.Sin((float)(phase + lfoAmplitude * Mathf.Sin((float)lfoPhase)));
+            return Mathf.Sin((float)(note.phase + lfoAmplitude * Mathf.Sin((float)lfoPhase)));
         }
 
-        private double SquareWave()
+        private double SquareWave(Note note)
         {
-            return Mathf.Sin((float)(phase + lfoAmplitude * Mathf.Sin((float)lfoPhase))) >= 0 ? .5f : -.5f;
+            return Mathf.Sin((float)(note.phase + lfoAmplitude * Mathf.Sin((float)lfoPhase))) >= 0 ? .5f : -.5f;
         }
 
-        private double TriangleWave()
+        private double TriangleWave(Note note)
         {
-            return 2 / Mathf.PI * Mathf.Asin(Mathf.Sin((float)(phase + lfoAmplitude * Mathf.Sin((float)lfoPhase))));
+            return 2 / Mathf.PI * Mathf.Asin(Mathf.Sin((float)(note.phase + lfoAmplitude * Mathf.Sin((float)lfoPhase))));
         }
 
-        private double SawtoothWave()
+        private double SawtoothWave(Note note)
         {
-            return phase / pi_twice - .5;
+            return note.phase / pi_twice - .5;
         }
 
-        private double AnalogSawtoothWave()
+        private double AnalogSawtoothWave(Note note)
         {
             double output = 0;
             for (double n = 1; n < 10; ++n)
-                output += Mathf.Sin((float)(n * phase)) / n;
+                output += Mathf.Sin((float)(n * (note.phase + lfoAmplitude * Mathf.Sin((float)lfoPhase)))) / n;
             return output;
         }
 
-        private double AnimationCurveWave()
+        private double AnimationCurveWave(Note note)
         {
-            return curve.Evaluate((float)(phase / pi_twice));
+            return curve.Evaluate((float)(note.phase / pi_twice));
         }
 
-        private double Noise()
+        private double Noise(Note note)
         {
             return rand.NextDouble() * 2 - 1;
         }
