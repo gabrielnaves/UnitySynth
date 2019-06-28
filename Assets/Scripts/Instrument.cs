@@ -9,7 +9,7 @@ namespace Synth
         public Envelope envelope;
 
         private AudioSource audioSource;
-        private Waveform[] waveforms;
+        private Oscillator[] waveforms;
         private List<Note> notes = new List<Note>();
         private double gain;
 
@@ -21,7 +21,7 @@ namespace Synth
         private void Awake()
         {
             audioSource = GetComponent<AudioSource>();
-            waveforms = GetComponents<Waveform>();
+            waveforms = GetComponents<Oscillator>();
         }
 
         private void Update()

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Synth
 {
-    public class Waveform : MonoBehaviour
+    public class Oscillator : MonoBehaviour
     {
         public enum WaveType { sine, square, triangle, analogSawtooth, digitalSawtooth, animationCurve, noise }
 

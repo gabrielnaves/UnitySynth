@@ -240,7 +240,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047040837}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91824f61e4580674f9a123c0f83de0d9, type: 3}
   m_Name: 
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047040837}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da8f14f9cae4647488a6c26acab493d6, type: 3}
   m_Name: 
@@ -293,7 +293,7 @@ PrefabInstance:
     - target: {fileID: 1840597369307667674, guid: cb6c20ca1391ee34d94d948ebf44225e,
         type: 3}
       propertyPath: m_Name
-      value: Oscillator
+      value: Piano
       objectReference: {fileID: 0}
     - target: {fileID: 1840597369307667673, guid: cb6c20ca1391ee34d94d948ebf44225e,
         type: 3}
@@ -348,6 +348,21 @@ PrefabInstance:
     - target: {fileID: 1840597369307667673, guid: cb6c20ca1391ee34d94d948ebf44225e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840597369307667672, guid: cb6c20ca1391ee34d94d948ebf44225e,
+        type: 3}
+      propertyPath: envelope.attackTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840597369307667672, guid: cb6c20ca1391ee34d94d948ebf44225e,
+        type: 3}
+      propertyPath: envelope.decayTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840597369307667672, guid: cb6c20ca1391ee34d94d948ebf44225e,
+        type: 3}
+      propertyPath: envelope.sustainAmplitude
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
