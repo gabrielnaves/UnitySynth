@@ -10,7 +10,7 @@ namespace Synth
         public List<Note> notes = new List<Note>();
 
         private AudioSource audioSource;
-        private Oscillator[] waveforms;
+        private Oscillator[] oscillators;
         private double gain;
         private double sampling_frequency = 48000.0;
         private double dt;
@@ -23,7 +23,7 @@ namespace Synth
         private void Awake()
         {
             audioSource = GetComponent<AudioSource>();
-            waveforms = GetComponents<Oscillator>();
+            oscillators = GetComponents<Oscillator>();
             dt = 1 / sampling_frequency;
         }
 
@@ -45,9 +45,9 @@ namespace Synth
                 double d = 0;
                 foreach (var note in notes)
                 {
-                    foreach (var wave in waveforms)
+                    foreach (var oscillator in oscillators)
                     {
-                        d += envelope.GetAmplitude(note) * wave.Evaluate(note);
+                        d += envelope.GetAmplitude(note) * oscillator.Evaluate(note);
                     }
                 }
 
@@ -59,8 +59,8 @@ namespace Synth
 
         private void UpdatePhases(Note[] notes)
         {
-            foreach (var wave in waveforms)
-                wave.UpdatePhase(dt);
+            foreach (var oscillator in oscillators)
+                oscillator.UpdatePhase(dt);
             foreach (var note in notes)
                 note.Update(dt);
         }
