@@ -1,22 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
 
 namespace Synth
 {
     [System.Serializable]
     public class Note
     {
-        public double frequency = 440;
-        public bool on = true;
+        public double frequency;
+        public bool on;
 
         [ViewOnly] public double elapsedTime;
         [ViewOnly] public double triggerOffTime;
         [ViewOnly] public bool dead;
         [ViewOnly] public double phase;
 
-        private double sampling_frequency = 48000.0;
-        private double pi_twice = 2 * Mathf.PI;
-
-        private double dt;
+        private double pi_twice;
 
         public Note()
         {
@@ -25,19 +22,21 @@ namespace Synth
 
         public Note(double frequency)
         {
-            this.frequency = frequency;
             Setup();
+            this.frequency = frequency;
         }
 
-        private void Setup() {
-            dt = 1.0 / sampling_frequency;
+        private void Setup()
+        {
+            this.frequency = 440;
+            on = true;
+            pi_twice = 2 * Math.PI;
         }
 
-        public void Update() {
+        public void Update(double dt)
+        {
             elapsedTime += dt;
-            phase += frequency * pi_twice / sampling_frequency;
-            if (phase > pi_twice)
-                phase -= pi_twice;
+            phase += frequency * pi_twice * dt;
         }
 
         public void TurnOff()

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7915085237808440736}
   - component: {fileID: 1840597369307667675}
   m_Layer: 0
-  m_Name: Oscillator
+  m_Name: Instrument
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1d5dfb2be2976042b1bbe671705ebe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  envelope:
+    attackTime: 0.01
+    decayTime: 0.01
+    releaseTime: 0.02
+    startAmplitude: 1
+    sustainAmplitude: 0.8
+  time: 0
 --- !u!114 &7915085237808440736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,9 +107,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  frequency: 440
+  frequencyOffset: 0
   lfoFrequency: 0
   lfoAmplitude: 0
+  analogSawDivisions: 10
 --- !u!82 &1840597369307667675
 AudioSource:
   m_ObjectHideFlags: 0

@@ -7,11 +7,13 @@ namespace Synth
     public class Instrument : MonoBehaviour
     {
         public Envelope envelope;
+        public List<Note> notes = new List<Note>();
 
         private AudioSource audioSource;
         private Oscillator[] waveforms;
-        private List<Note> notes = new List<Note>();
         private double gain;
+        private double sampling_frequency = 48000.0;
+        private double dt;
 
         public void AddNote(Note note)
         {
@@ -22,6 +24,7 @@ namespace Synth
         {
             audioSource = GetComponent<AudioSource>();
             waveforms = GetComponents<Oscillator>();
+            dt = 1 / sampling_frequency;
         }
 
         private void Update()
@@ -37,13 +40,13 @@ namespace Synth
 
             for (int i = 0; i < data.Length; i += channels)
             {
+                UpdatePhases(notes);
+
                 double d = 0;
-                foreach (var wave in waveforms)
+                foreach (var note in notes)
                 {
-                    wave.UpdateLFOPhase();
-                    foreach (var note in notes)
+                    foreach (var wave in waveforms)
                     {
-                        note.Update();
                         d += envelope.GetAmplitude(note) * wave.Evaluate(note);
                     }
                 }
@@ -52,6 +55,14 @@ namespace Synth
                 if (channels == 2)
                     data[i + 1] = data[i];
             }
+        }
+
+        private void UpdatePhases(Note[] notes)
+        {
+            foreach (var wave in waveforms)
+                wave.UpdatePhase(dt);
+            foreach (var note in notes)
+                note.Update(dt);
         }
     }
 }
