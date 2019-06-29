@@ -31,6 +31,7 @@ namespace Synth
             this.frequency = 440;
             on = true;
             pi_twice = 2 * Math.PI;
+            triggerOffTime = -1;
         }
 
         public void Update(double dt)
@@ -41,7 +42,6 @@ namespace Synth
 
         public void TurnOff()
         {
-            triggerOffTime = elapsedTime;
             on = false;
         }
 
