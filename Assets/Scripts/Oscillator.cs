@@ -10,6 +10,7 @@ namespace Synth
 
         public WaveType type;
         public AnimationCurve curve;
+        [Range(0, 1)] public double volume = 1;
         public double frequencyOffset;
         public double lfoFrequency;
         public double lfoAmplitude;
@@ -30,7 +31,7 @@ namespace Synth
 
         public double Evaluate(Note note)
         {
-            return waveFunction[type](note);
+            return volume * waveFunction[type](note);
         }
 
         private void Awake()

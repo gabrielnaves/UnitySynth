@@ -51,7 +51,7 @@ MonoBehaviour:
     releaseTime: 0.02
     startAmplitude: 1
     sustainAmplitude: 0.8
-  time: 0
+  notes: []
 --- !u!114 &7915085237808440736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  volume: 1
   frequencyOffset: 0
   lfoFrequency: 0
   lfoAmplitude: 0
