@@ -11,7 +11,8 @@ namespace Synth
         public WaveType type;
         public AnimationCurve curve;
         [Range(0, 1)] public double volume = 1;
-        public double frequencyOffset;
+        public double linearFrequencyOffset;
+        public double frequencyMultiplier = 1;
         public double lfoFrequency;
         public double lfoAmplitude;
         public int analogSawDivisions = 5;
@@ -26,7 +27,7 @@ namespace Synth
         public void UpdatePhase(double dt)
         {
             lfoPhase = (lfoPhase + lfoFrequency * pi_twice * dt) % pi_twice;
-            offsetPhase = (offsetPhase + frequencyOffset * pi_twice * dt) % pi_twice;
+            offsetPhase = (offsetPhase + linearFrequencyOffset * pi_twice * dt) % pi_twice;
         }
 
         public double Evaluate(Note note)
@@ -53,7 +54,7 @@ namespace Synth
 
         private double SineWave(Note note)
         {
-            return Math.Sin(note.phase + offsetPhase + lfoAmplitude * Math.Sin(lfoPhase));
+            return Math.Sin((note.phase + offsetPhase) * frequencyMultiplier + lfoAmplitude * Math.Sin(lfoPhase));
         }
 
         private double SquareWave(Note note)
@@ -70,13 +71,13 @@ namespace Synth
         {
             double output = 0;
             for (double n = 1; n < analogSawDivisions; ++n)
-                output += Math.Sin(n * (note.phase + offsetPhase + lfoAmplitude * Math.Sin(lfoPhase))) / n;
+                output += Math.Sin(n * ((note.phase + offsetPhase) * frequencyMultiplier + lfoAmplitude * Math.Sin(lfoPhase))) / n;
             return output * .5;
         }
 
         private double DigitalSawtoothWave(Note note)
         {
-            return (note.phase + offsetPhase) % pi_twice / pi_twice;
+            return ((note.phase + offsetPhase) * frequencyMultiplier) % pi_twice / pi_twice;
         }
 
         private double AnimationCurveWave(Note note)
