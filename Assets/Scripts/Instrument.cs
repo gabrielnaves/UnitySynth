@@ -14,6 +14,7 @@ namespace Synth
         private double gain;
         private double sampling_frequency = 48000.0;
         private double dt;
+        private double time;
 
         public void AddNote(Note note)
         {
@@ -47,7 +48,7 @@ namespace Synth
                 {
                     foreach (var oscillator in oscillators)
                     {
-                        d += envelope.GetAmplitude(note) * oscillator.Evaluate(note);
+                        d += envelope.GetAmplitude(note) * oscillator.Evaluate(note, time);
                     }
                 }
 
@@ -59,6 +60,7 @@ namespace Synth
 
         private void UpdatePhases(Note[] notes)
         {
+            time += dt;
             foreach (var oscillator in oscillators)
                 oscillator.UpdatePhase(dt);
             foreach (var note in notes)
