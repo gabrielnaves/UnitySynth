@@ -8,7 +8,8 @@ namespace Synth
         public Instrument[] instruments;
         public double baseFrequency;
 
-        private KeyCode[] keys = new KeyCode[] {
+        private KeyCode[] keys = new KeyCode[]
+        {
             KeyCode.Z,
             KeyCode.S,
             KeyCode.X,
