@@ -10,8 +10,8 @@ namespace Synth
 
         [ViewOnly] public double elapsedTime;
         [ViewOnly] public double triggerOffTime;
-        [ViewOnly] public bool dead;
         [ViewOnly] public double phase;
+        [ViewOnly] public bool dead;
 
         private double pi_twice;
 
@@ -22,16 +22,16 @@ namespace Synth
 
         public Note(double frequency)
         {
-            Setup();
-            this.frequency = frequency;
+            Setup(frequency);
         }
 
-        private void Setup()
+        private void Setup(double frequency=440)
         {
-            this.frequency = 440;
-            on = true;
+            this.frequency = frequency;
             pi_twice = 2 * Math.PI;
             triggerOffTime = -1;
+            on = true;
+            dead = false;
         }
 
         public void Update(double dt)

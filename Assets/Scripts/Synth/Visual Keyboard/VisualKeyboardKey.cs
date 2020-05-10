@@ -7,8 +7,8 @@ namespace Synth
         public Sprite notPressed;
         public Sprite pressed;
 
-        public int index;
-        public bool isPressed;
+        [ViewOnly] public int index;
+        [ViewOnly] public bool isPressed;
 
         SpriteRenderer spriteRenderer;
 
