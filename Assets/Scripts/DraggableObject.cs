@@ -1,49 +1,26 @@
 ﻿using UnityEngine;
 
-public class DraggableObject : MonoBehaviour
-{
-    public LayerMask obstacleMask;
-    public MinMax raycastDepth = new MinMax(-5, 5);
+public class DraggableObject : MonoBehaviour, IDraggable {
 
-    private Camera cam;
-    private Vector2 initialScreenPos;
-    private Vector3 initialWorldPos;
-    private bool draggingObject;
+    private Vector3 initialMouseWorldPos;
+    private Vector3 initialObjectWorldPos;
 
-    private void Awake()
-    {
-        cam = Camera.main;
+    void IDraggable.OnDragStart(Vector2 mouseScreenPosition, Vector3 mouseWorldPosition) {
+        initialMouseWorldPos = mouseWorldPosition;
+        initialObjectWorldPos = transform.position;
     }
 
-    private void Update()
-    {
-        if (!draggingObject)
-            CheckForDragStart();
-        else
-            UpdateDrag();
+    void IDraggable.OnDragUpdate(Vector2 mouseScreenPosition, Vector3 mouseWorldPosition) {
+        DragObject(mouseWorldPosition);
     }
 
-    private void CheckForDragStart()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector2 worldMousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            var hit = Physics2D.Raycast(worldMousePos, Vector2.zero, 0f, obstacleMask, raycastDepth.min, raycastDepth.max);
-            if (hit && hit.collider.gameObject == gameObject)
-            {
-                draggingObject = true;
-                initialScreenPos = Input.mousePosition;
-                initialWorldPos = transform.position;
-            }
-        }
+    void IDraggable.OnDragEnd(Vector2 mouseScreenPosition, Vector3 mouseWorldPosition) {
+        DragObject(mouseWorldPosition);
     }
 
-    private void UpdateDrag()
-    {
-        Vector3 worldOffset = cam.ScreenToWorldPoint(Input.mousePosition) - cam.ScreenToWorldPoint(initialScreenPos);
+    void DragObject(Vector3 mouseWorldPosition) {
+        Vector3 worldOffset = mouseWorldPosition - initialMouseWorldPos;
         worldOffset.z = 0;
-        transform.position = initialWorldPos + worldOffset;
-        if (Input.GetMouseButtonUp(0))
-            draggingObject = false;
+        transform.position = initialObjectWorldPos + worldOffset;
     }
 }

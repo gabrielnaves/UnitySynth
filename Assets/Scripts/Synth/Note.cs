@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Synth
-{
-    [System.Serializable]
-    public class Note
-    {
+namespace Synth {
+    
+    [Serializable]
+    public class Note {
+
         public double frequency;
         public bool on;
 
@@ -15,18 +15,19 @@ namespace Synth
 
         private double pi_twice;
 
-        public Note()
-        {
+        public Note() {
             Setup();
         }
 
-        public Note(double frequency)
-        {
+        public Note(Note note) {
+            Setup(note.frequency);
+        }
+
+        public Note(double frequency) {
             Setup(frequency);
         }
 
-        private void Setup(double frequency=440)
-        {
+        private void Setup(double frequency=440) {
             this.frequency = frequency;
             pi_twice = 2 * Math.PI;
             triggerOffTime = -1;
@@ -34,19 +35,16 @@ namespace Synth
             dead = false;
         }
 
-        public void Update(double dt)
-        {
+        public void Update(double dt) {
             elapsedTime += dt;
             phase += frequency * pi_twice * dt;
         }
 
-        public void TurnOff()
-        {
+        public void TurnOff() {
             on = false;
         }
 
-        public void Deactivate()
-        {
+        public void Deactivate() {
             dead = true;
         }
     }

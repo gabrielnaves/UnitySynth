@@ -1,49 +1,34 @@
 ﻿using UnityEngine;
 
-public class CameraControls : MonoBehaviour
-{
-    public LayerMask obstacleMask;
-    public MinMax raycastDepth = new MinMax(-5, 5);
+public class CameraControls : MonoBehaviour, IDraggable {
 
-    private Camera cam;
+    static public CameraControls instance { get; private set; }
+
     private Vector2 initialScreenPos;
     private Vector3 initialWorldPos;
-    private bool movingCamera;
+    private Camera cam;
 
-    private void Awake()
-    {
-        cam = GetComponent<Camera>();
+    private void Awake() {
+        instance = (CameraControls)Singleton.Setup(this, instance);
+        cam = Camera.main;
     }
 
-    private void Update()
-    {
-        if (!movingCamera)
-            CheckForMovementStart();
-        else
-            UpdateCameraMovement();
+    void IDraggable.OnDragStart(Vector2 mouseScreenPosition, Vector3 mouseWorldPosition) {
+        initialScreenPos = mouseScreenPosition;
+        initialWorldPos = transform.position;
     }
 
-    private void CheckForMovementStart()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector2 worldMousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            var hit = Physics2D.Raycast(worldMousePos, Vector2.zero, 0f, obstacleMask, raycastDepth.min, raycastDepth.max);
-            if (!hit)
-            {
-                movingCamera = true;
-                initialScreenPos = Input.mousePosition;
-                initialWorldPos = transform.position;
-            }
-        }
+    void IDraggable.OnDragUpdate(Vector2 mouseScreenPosition, Vector3 mouseWorldPosition) {
+        UpdateCameraPosition(mouseWorldPosition);
     }
 
-    private void UpdateCameraMovement()
-    {
-        Vector3 worldOffset = cam.ScreenToWorldPoint(initialScreenPos) - cam.ScreenToWorldPoint(Input.mousePosition);
+    void IDraggable.OnDragEnd(Vector2 mouseScreenPosition, Vector3 mouseWorldPosition) {
+        UpdateCameraPosition(mouseWorldPosition);
+    }
+
+    void UpdateCameraPosition(Vector3 mouseWorldPosition) {
+        Vector3 worldOffset = cam.ScreenToWorldPoint(initialScreenPos) - mouseWorldPosition;
         worldOffset.z = 0;
         transform.position = initialWorldPos + worldOffset;
-        if (Input.GetMouseButtonUp(0))
-            movingCamera = false;
     }
 }
