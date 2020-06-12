@@ -1,70 +1,57 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Synth
-{
+namespace Synth {
+
     [RequireComponent(typeof(AudioSource))]
-    public class Instrument : MonoBehaviour
-    {
+    public class Instrument : MonoBehaviour {
+
         public Envelope envelope;
-        public List<Note> notes = new List<Note>();
+        public Oscillator[] additiveOscillators;
 
-        private AudioSource audioSource;
-        private Oscillator[] oscillators;
-        private double gain;
-        private double sampling_frequency = 48000.0;
-        private double dt;
-        private double time;
+        [ViewOnly] public List<Note> notes = new List<Note>();
 
-        public void AddNote(Note note)
-        {
-            notes.Add(note);
-        }
+        AudioSource audioSource;
+        Oscillator[] allOscillators;
 
-        private void Awake()
-        {
+        const double SAMPLING_FREQENCY = 48000.0;
+        const double dt = 1 / SAMPLING_FREQENCY;
+        double gain;
+        //double time;
+
+        public void AddNote(Note note) => notes.Add(note);
+
+        void Awake() {
             audioSource = GetComponent<AudioSource>();
-            oscillators = GetComponents<Oscillator>();
-            dt = 1 / sampling_frequency;
+            allOscillators = GetComponentsInChildren<Oscillator>();
         }
 
-        private void Update()
-        {
+        void Update() {
             gain = audioSource.volume * .1;
             notes.RemoveAll((note) => note.dead);
         }
 
         // Important note: OnAudioFilterRead runs on a different thread, and some unity features aren't available here
-        private void OnAudioFilterRead(float[] data, int channels)
-        {
-            Note[] notes = this.notes.ToArray();
+        void OnAudioFilterRead(float[] data, int channels) {
 
-            for (int i = 0; i < data.Length; i += channels)
-            {
-                UpdatePhases(notes);
-
-                double d = 0;
-                foreach (var note in notes)
-                {
-                    foreach (var oscillator in oscillators)
-                    {
-                        d += envelope.GetAmplitude(note) * oscillator.Evaluate(note, time);
-                    }
-                }
-
-                data[i] = (float)(gain * d);
+            for (int i = 0; i < data.Length; i += channels) {
+                UpdateOscillators();
+                data[i] = (float)(gain * EvaluateOscillators());
                 if (channels == 2)
                     data[i + 1] = data[i];
             }
         }
 
-        private void UpdatePhases(Note[] notes)
-        {
-            time += dt;
-            foreach (var oscillator in oscillators)
-                oscillator.UpdatePhase(dt);
-            foreach (var note in notes)
-                note.Update(dt);
+        void UpdateOscillators() {
+            foreach (var oscillator in allOscillators)
+                oscillator.UpdateOscillator(dt);
+        }
+
+        double EvaluateOscillators() {
+            double result = 0;
+            foreach (var oscillator in additiveOscillators)
+                result += oscillator.value;
+            return result;
         }
     }
 }
